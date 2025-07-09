@@ -6,7 +6,7 @@ import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase
 
 // შენი Firebase კონფიგურაციის მონაცემები
 const firebaseConfig = {
-  apiKey: "AIzaSyC5Nmsdmv6aRgXSZtasPHCba__Ad10b-uU", // <-- აქ ჩასვი ზუსტად ის API Key, რაც Firebase-დან დააკოპირე
+  apiKey: "AIzaSyB4X0i9h8dSgxuJxl9ld6S21JuRHezMA-w", // <-- აქ ჩასმულია შენი ახალი API Key
   authDomain: "courier-tracking-c36c5.firebaseapp.com",
   projectId: "courier-tracking-c36c5",
   storageBucket: "courier-tracking-c36c5.firebasestorage.app",
