@@ -2,26 +2,26 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js"; // Analytics-ის იმპორტი
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
 
 // შენი Firebase კონფიგურაციის მონაცემები
 const firebaseConfig = {
-  apiKey: "AIzaSyC5Nmsdmv6aRgXSZtasPHCba__Ad10b-uU",
+  apiKey: "YOUR_NEW_API_KEY_FROM_FIREBASE_CONSOLE", // <-- აქ ჩასვი ახალი, სწორი API Key
   authDomain: "courier-tracking-c36c5.firebaseapp.com",
   projectId: "courier-tracking-c36c5",
   storageBucket: "courier-tracking-c36c5.appspot.com",
   messagingSenderId: "19606482959",
   appId: "1:19606482959:web:1f3c22799f66b0cf17337a",
-  measurementId: "G-R2MZV6GDXB" // Analytics-ის ID
+  measurementId: "G-R2MZV6GDXB"
 };
 
 // Firebase აპლიკაციის ინიციალიზაცია
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
-const analytics = getAnalytics(app); // Analytics-ის ინიციალიზაცია
+const analytics = getAnalytics(app);
 
-let userId = null; // მომხმარებლის ID
+let userId = null;
 
 // ელემენტების მიღება HTML-იდან
 const odometerForm = document.getElementById('odometerForm');
@@ -35,21 +35,18 @@ const courierDataTableBody = document.getElementById('courierDataTableBody');
 // მიმდინარე თარიღის დაყენება ინფუთ ველში
 const today = new Date();
 const year = today.getFullYear();
-const month = String(today.getMonth() + 1).padStart(2, '0'); // თვეები იწყება 0-დან
+const month = String(today.getMonth() + 1).padStart(2, '0');
 const day = String(today.getDate()).padStart(2, '0');
 currentDateInput.value = `${year}-${month}-${day}`;
 
 // ავტორიზაციის მდგომარეობის მონიტორინგი
 onAuthStateChanged(auth, async (user) => {
     if (user) {
-        // მომხმარებელი შესულია
         userId = user.uid;
         userIdDisplay.textContent = userId;
         console.log("მომხმარებელი შესულია ID-ით:", userId);
-        // მონაცემების ჩატვირთვა მომხმარებლისთვის
         loadCourierData(userId);
     } else {
-        // მომხმარებელი არ არის შესული, ვცდილობთ ანონიმურ შესვლას (GitHub Pages-ზე Custom Token არ იქნება)
         try {
             await signInAnonymously(auth);
             console.log("ანონიმური შესვლა წარმატებულია.");
@@ -62,7 +59,7 @@ onAuthStateChanged(auth, async (user) => {
 
 // ფორმის გაგზავნისას
 odometerForm.addEventListener('submit', async (e) => {
-    e.preventDefault(); // ფორმის სტანდარტული გაგზავნის გაუქმება
+    e.preventDefault();
 
     if (!userId) {
         showMessage('მომხმარებელი არ არის ავტორიზებული. გთხოვთ, დაელოდოთ.', 'error');
@@ -81,20 +78,18 @@ odometerForm.addEventListener('submit', async (e) => {
     const dailyMileage = endOdometer - startOdometer;
 
     try {
-        // მონაცემების შენახვა Cloud Firestore-ში
-        // PATH შეიცვალა: `users/${userId}/dailyReadings`
         await addDoc(collection(db, `users/${userId}/dailyReadings`), {
-            courierId: userId, // კურიერის ID
-            date: date, // თარიღი სტრიქონად
+            courierId: userId,
+            date: date,
             startOdometer: startOdometer,
             endOdometer: endOdometer,
             dailyMileage: dailyMileage,
-            timestamp: serverTimestamp() // ჩანაწერის დრო
+            timestamp: serverTimestamp()
         });
 
         showMessage('მონაცემები წარმატებით შეინახა!', 'success');
-        odometerForm.reset(); // ფორმის გასუფთავება
-        currentDateInput.value = `${year}-${month}-${day}`; // თარიღის ხელახლა დაყენება
+        odometerForm.reset();
+        currentDateInput.value = `${year}-${month}-${day}`;
     } catch (error) {
         console.error("მონაცემების შენახვისას მოხდა შეცდომა: ", error);
         showMessage('მონაცემების შენახვისას მოხდა შეცდომა. სცადეთ მოგვიანებით.', 'error');
@@ -103,22 +98,18 @@ odometerForm.addEventListener('submit', async (e) => {
 
 // კურიერის მონაცემების ჩატვირთვა რეალურ დროში
 function loadCourierData(currentUserId) {
-    // ქმნის Firestore query-ს, რომელიც იღებს მხოლოდ მიმდინარე მომხმარებლის მონაცემებს
-    // PATH შეიცვალა: `users/${currentUserId}/dailyReadings`
     const q = query(
         collection(db, `users/${currentUserId}/dailyReadings`),
         where("courierId", "==", currentUserId)
     );
 
-    // onSnapshot უსმენს ცვლილებებს რეალურ დროში
     onSnapshot(q, (snapshot) => {
-        courierDataTableBody.innerHTML = ''; // ცხრილის გასუფთავება
+        courierDataTableBody.innerHTML = '';
         const data = [];
         snapshot.forEach((doc) => {
             data.push({ id: doc.id, ...doc.data() });
         });
 
-        // მონაცემების დალაგება თარიღის მიხედვით (უახლესი პირველი)
         data.sort((a, b) => new Date(b.date) - new Date(a.date));
 
         data.forEach((docData) => {
@@ -140,7 +131,7 @@ function loadCourierData(currentUserId) {
 // შეტყობინების ჩვენება
 function showMessage(msg, type) {
     messageDiv.textContent = msg;
-    messageDiv.className = 'message'; // კლასების გასუფთავება და ძირითადი კლასის დამატება
-    messageDiv.classList.add(type); // 'success' ან 'error'
-    messageDiv.classList.remove('hidden'); // ჩვენება
+    messageDiv.className = 'message';
+    messageDiv.classList.add(type);
+    messageDiv.classList.remove('hidden');
 }
