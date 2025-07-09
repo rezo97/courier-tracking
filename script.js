@@ -6,10 +6,10 @@ import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase
 
 // შენი Firebase კონფიგურაციის მონაცემები
 const firebaseConfig = {
-  apiKey: "YOUR_NEW_API_KEY_FROM_FIREBASE_CONSOLE", // <-- აქ ჩასვი ახალი, სწორი API Key
+  apiKey: "AIzaSyC5Nmsdmv6aRgXSZtasPHCba__AdlOb-uU", // <-- აქ ჩასვი ახალი, სწორი API Key
   authDomain: "courier-tracking-c36c5.firebaseapp.com",
   projectId: "courier-tracking-c36c5",
-  storageBucket: "courier-tracking-c36c5.appspot.com",
+  storageBucket: "courier-tracking-c36c5.firebasestorage.app",
   messagingSenderId: "19606482959",
   appId: "1:19606482959:web:1f3c22799f66b0cf17337a",
   measurementId: "G-R2MZV6GDXB"
