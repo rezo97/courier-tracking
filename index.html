@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>კურიერის მართვის სისტემა</title>
+    <!-- Tailwind CSS-ის ჩატვირთვა სტილებისთვის -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- შენი მორგებული სტილების ფაილის დაკავშირება -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gray-100">
+    <div class="container">
+        <header class="text-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">კურიერის მართვის სისტემა</h1>
+            <p class="text-sm text-gray-600 mt-2">
+                შესული ხართ როგორც: <span id="userRoleDisplay" class="font-semibold text-blue-600">იტვირთება...</span>
+                (<span id="userIdDisplay" class="font-semibold text-gray-500"></span>)
+            </p>
+            <button id="logoutBtn" class="mt-4 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 hidden">
+                გასვლა
+            </button>
+        </header>
+
+        <!-- ავტორიზაციის ფორმები -->
+        <div id="authSection" class="space-y-4">
+            <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">შესვლა / რეგისტრაცია</h2>
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label for="loginEmail" class="block text-gray-700 text-sm font-medium mb-1">ელ.ფოსტა:</label>
+                    <input type="email" id="loginEmail" placeholder="შეიყვანეთ ელ.ფოსტა" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
+                </div>
+                <div>
+                    <label for="loginPassword" class="block text-gray-700 text-sm font-medium mb-1">პაროლი:</label>
+                    <input type="password" id="loginPassword" placeholder="შეიყვანეთ პაროლი" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    შესვლა
+                </button>
+            </form>
+
+            <p class="text-center text-gray-600">ან</p>
+
+            <form id="signupForm" class="space-y-4">
+                <div>
+                    <label for="signupEmail" class="block text-gray-700 text-sm font-medium mb-1">ელ.ფოსტა:</label>
+                    <input type="email" id="signupEmail" placeholder="შეიყვანეთ ელ.ფოსტა" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
+                </div>
+                <div>
+                    <label for="signupPassword" class="block text-gray-700 text-sm font-medium mb-1">პაროლი:</label>
+                    <input type="password" id="signupPassword" placeholder="შეიყვანეთ პაროლი (მინ. 6 სიმბოლო)" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
+                </div>
+                <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                    რეგისტრაცია (კურიერი)
+                </button>
+            </form>
+            <div id="authMessage" class="message hidden"></div>
+        </div>
+
+        <!-- კურიერის პანელი -->
+        <div id="courierPanel" class="hidden">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">კურიერის ოდომეტრის ჩაწერა</h2>
+            <form id="odometerForm" class="space-y-4">
+                <div>
+                    <label for="currentDate" class="block text-gray-700 text-sm font-medium mb-1">თარიღი:</label>
+                    <input type="date" id="currentDate" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
+                </div>
+
+                <div>
+                    <label for="startOdometer" class="block text-gray-700 text-sm font-medium mb-1">საწყისი ოდომეტრი:</label>
+                    <input type="number" id="startOdometer" placeholder="შეიყვანეთ საწყისი ოდომეტრი" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
+                </div>
+
+                <div>
+                    <label for="endOdometer" class="block text-gray-700 text-sm font-medium mb-1">საბოლოო ოდომეტრი:</label>
+                    <input type="number" id="endOdometer" placeholder="შეიყვანეთ საბოლოო ოდომეტრი" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
+                </div>
+
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    მონაცემების შენახვა
+                </button>
+            </form>
+            <div id="courierMessage" class="message hidden"></div>
+
+            <h2 class="text-2xl font-bold text-gray-800 mt-8 mb-4 text-center">თქვენი მონაცემები</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>თარიღი</th>
+                        <th>საწყისი</th>
+                        <th>საბოლოო</th>
+                        <th>გავლილი მანძილი</th>
+                    </tr>
+                </thead>
+                <tbody id="courierDataTableBody">
+                    <!-- კურიერის მონაცემები აქ გამოჩნდება -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ადმინის პანელი -->
+        <div id="adminPanel" class="hidden">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">ადმინ პანელი - ყველა კურიერის მონაცემები</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>კურიერის ID</th>
+                        <th>თარიღი</th>
+                        <th>საწყისი</th>
+                        <th>საბოლოო</th>
+                        <th>გავლილი მანძილი</th>
+                        <th>საწვავი (ლიტრი)</th>
+                        <th>საწვავის ღირებულება</th>
+                        <th>მოქმედება</th>
+                    </tr>
+                </thead>
+                <tbody id="adminDataTableBody">
+                    <!-- ადმინის მონაცემები აქ გამოჩნდება -->
+                </tbody>
+            </table>
+            <div id="adminMessage" class="message hidden"></div>
+        </div>
+    </div>
+
+    <!-- შენი JavaScript კოდის ფაილის დაკავშირება -->
+    <script type="module" src="script.js"></script>
+</body>
+</html>

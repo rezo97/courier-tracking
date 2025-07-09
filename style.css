@@ -1,0 +1,64 @@
+/* ინტერ ფონტის ჩატვირთვა */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f0f2f5; /* ღია ნაცრისფერი ფონი */
+}
+/* მორგებული სტილები, რადგან Tailwind-მა შეიძლება ყველაფერი არ დაფაროს */
+.container {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px; /* მომრგვალებული კუთხეები */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+input[type="number"],
+input[type="date"],
+input[type="email"],
+input[type="password"] {
+    padding: 12px;
+    border: 1px solid #e2e8f0; /* ღია ნაცრისფერი საზღვარი */
+    border-radius: 8px; /* მომრგვალებული კუთხეები */
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box; /* padding-ის ჩათვლა სიგანეში */
+}
+button {
+    padding: 12px 20px;
+    border-radius: 8px; /* მომრგვალებული კუთხეები */
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+button:hover {
+    transform: translateY(-2px); /* პატარა ანიმაცია */
+}
+.message {
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 20px;
+    text-align: center;
+}
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+.data-table th, .data-table td {
+    border: 1px solid #e2e8f0;
+    padding: 10px;
+    text-align: left;
+}
+.data-table th {
+    background-color: #f8fafc;
+    font-weight: 600;
+}
