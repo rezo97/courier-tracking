@@ -82,13 +82,8 @@ odometerForm.addEventListener('submit', async (e) => {
 
     try {
         // მონაცემების შენახვა Cloud Firestore-ში
-        // მონაცემები ინახება მომხმარებლის პირად კოლექციაში
-        // შენი Firebase Security Rules უნდა იყოს დაყენებული, რომ ეს იმუშაოს:
-        // match /artifacts/{appId}/users/{userId}/{document=**} {
-        //   allow read, write: if request.auth != null && request.auth.uid == userId;
-        // }
-        // appId-ის ნაცვლად ვიყენებთ Firebase Project ID-ს, რადგან ეს არის რეალური Firebase პროექტი
-        await addDoc(collection(db, `artifacts/${firebaseConfig.projectId}/users/${userId}/dailyReadings`), {
+        // PATH შეიცვალა: `users/${userId}/dailyReadings`
+        await addDoc(collection(db, `users/${userId}/dailyReadings`), {
             courierId: userId, // კურიერის ID
             date: date, // თარიღი სტრიქონად
             startOdometer: startOdometer,
@@ -109,8 +104,9 @@ odometerForm.addEventListener('submit', async (e) => {
 // კურიერის მონაცემების ჩატვირთვა რეალურ დროში
 function loadCourierData(currentUserId) {
     // ქმნის Firestore query-ს, რომელიც იღებს მხოლოდ მიმდინარე მომხმარებლის მონაცემებს
+    // PATH შეიცვალა: `users/${currentUserId}/dailyReadings`
     const q = query(
-        collection(db, `artifacts/${firebaseConfig.projectId}/users/${currentUserId}/dailyReadings`),
+        collection(db, `users/${currentUserId}/dailyReadings`),
         where("courierId", "==", currentUserId)
     );
 
