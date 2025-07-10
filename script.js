@@ -71,7 +71,7 @@ const adminDataTableBody = document.getElementById('adminDataTableBody');
 const adminMessageDiv = document.getElementById('adminMessage');
 const filterCourierSelect = document.getElementById('filterCourier');
 const filterStartDateInput = document.getElementById('filterStartDate');
-const filterEndDateInput = document = document.getElementById('filterEndDate');
+const filterEndDateInput = document.getElementById('filterEndDate'); // შეცვლილია
 const applyFiltersBtn = document.getElementById('applyFiltersBtn');
 const downloadExcelBtn = document.getElementById('downloadExcelBtn');
 const clearDatabaseBtn = document.getElementById('clearDatabaseBtn');
