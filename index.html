@@ -152,6 +152,9 @@
                 <button type="button" id="downloadExcelBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 self-end">
                     ექსელში ჩამოტვირთვა
                 </button>
+                <button type="button" id="clearDatabaseBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 self-end">
+                    ბაზის გასუფთავება
+                </button>
             </div>
 
             <table class="data-table">
@@ -174,6 +177,26 @@
                 </tbody>
             </table>
             <div id="adminMessage" class="message hidden"></div>
+        </div>
+    </div>
+
+    <!-- პაროლის მოდალი -->
+    <div id="passwordModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-80 space-y-4">
+            <h3 class="text-xl font-bold text-gray-800 text-center">პაროლის შეყვანა</h3>
+            <div>
+                <label for="passwordInput" class="block text-gray-700 text-sm font-medium mb-1">შეიყვანეთ პაროლი:</label>
+                <input type="password" id="passwordInput" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
+            </div>
+            <div id="modalMessage" class="message hidden"></div>
+            <div class="flex justify-end space-x-4">
+                <button type="button" id="cancelClearBtn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg">
+                    გაუქმება
+                </button>
+                <button type="button" id="confirmClearBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
+                    დადასტურება
+                </button>
+            </div>
         </div>
     </div>
 
