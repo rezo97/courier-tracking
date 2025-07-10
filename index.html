@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>კურიერის მართვის სისტემა</title>
+    <!-- Tailwind CSS-ის ჩატვირთვა სტილებისთვის -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Google-like shadow */
+        }
+        input[type="number"],
+        input[type="date"],
+        input[type="email"],
+        input[type="password"],
+        input[type="text"],
+        input[type="file"] { /* Added file input */
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        input:focus {
+            outline: none;
+            border-color: #4285F4; /* Google Blue */
+            box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.2); /* Google-like focus ring */
+        }
+        button {
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            font-weight: 500; /* Slightly less bold */
+        }
+        button:hover {
+            transform: translateY(-1px); /* Subtle lift */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .message {
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .message.success {
+            background-color: #e6ffe6; /* Lighter green */
+            color: #1a73e8; /* Google Blue for text */
+            border: 1px solid #c6f6d5;
+        }
+        .message.error {
+            background-color: #ffe6e6; /* Lighter red */
+            color: #d93025; /* Google Red for text */
+            border: 1px solid #fbd3d3;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            text-align: left;
+        }
+        .data-table th {
+            background-color: #f8fafc;
+            font-weight: 600;
+        }
+
+        /* Custom styles for modal */
+        #passwordModal {
+            z-index: 1000; /* Ensure modal is on top */
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gray-100">
+    <div class="container">
+        <header class="text-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">კურიერის მართვის სისტემა</h1>
+            <p class="text-sm text-gray-600 mt-2">
+                შესული ხართ როგორც: <span id="userRoleDisplay" class="font-semibold text-blue-600">იტვირთება...</span>
+                (<span id="userIdDisplay" class="font-semibold text-gray-500"></span>)
+            </p>
+            <button id="logoutBtn" class="mt-4 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 hidden">
+                გასვლა
+            </button>
+        </header>
+
+        <!-- ავტორიზაციის კონტეინერი -->
+        <div id="authContainer" class="flex flex-col items-center justify-center gap-8">
+            <!-- შესვლის ფორმა -->
+            <div id="loginSection" class="bg-white p-6 rounded-lg shadow-md w-full max-w-sm">
+                <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">შესვლა</h2>
+                <form id="loginForm" class="space-y-4">
+                    <div>
+                        <label for="loginEmail" class="block text-gray-700 text-sm font-medium mb-1">ელ.ფოსტა:</label>
+                        <input type="email" id="loginEmail" placeholder="შეიყვანეთ ელ.ფოსტა" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
+                    </div>
+                    <div>
+                        <label for="loginPassword" class="block text-gray-700 text-sm font-medium mb-1">პაროლი:</label>
+                        <input type="password" id="loginPassword" placeholder="შეიყვანეთ პაროლი" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        შესვლა
+                    </button>
+                    <button type="button" id="showRegisterBtn" class="w-full bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 mt-2">
+                        რეგისტრაცია
+                    </button>
+                </form>
+            </div>
+
+            <!-- რეგისტრაციის ფორმა -->
+            <div id="registerSection" class="bg-white p-6 rounded-lg shadow-md hidden w-full max-w-sm">
+                <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">რეგისტრაცია</h2>
+                <form id="signupForm" class="space-y-4">
+                    <div>
+                        <label for="signupEmail" class="block text-gray-700 text-sm font-medium mb-1">ელ.ფოსტა:</label>
+                        <input type="email" id="signupEmail" placeholder="შეიყვანეთ ელ.ფოსტა" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
+                    </div>
+                    <div>
+                        <label for="signupPassword" class="block text-gray-700 text-sm font-medium mb-1">პაროლი:</label>
+                        <input type="password" id="signupPassword" placeholder="შეიყვანეთ პაროლი (მინ. 6 სიმბოლო)" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
+                    </div>
+                    <div>
+                        <label for="signupFirstName" class="block text-gray-700 text-sm font-medium mb-1">სახელი:</label>
+                        <input type="text" id="signupFirstName" placeholder="შეიყვანეთ სახელი" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
+                    </div>
+                    <div>
+                        <label for="signupLastName" class="block text-gray-700 text-sm font-medium mb-1">გვარი:</label>
+                        <input type="text" id="signupLastName" placeholder="შეიყვანეთ გვარი" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
+                    </div>
+                    <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                        რეგისტრაცია
+                    </button>
+                    <button type="button" id="showLoginBtn" class="w-full bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 mt-2">
+                        უკან შესვლაზე
+                    </button>
+                </form>
+            </div>
+            <div id="authMessage" class="message hidden md:col-span-2"></div>
+        </div>
+
+        <!-- კურიერის პანელი -->
+        <div id="courierPanel" class="hidden bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">კურიერის ოდომეტრის ჩაწერა</h2>
+            <form id="odometerForm" class="space-y-4">
+                <div>
+                    <label for="currentDate" class="block text-gray-700 text-sm font-medium mb-1">თარიღი:</label>
+                    <input type="date" id="currentDate" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
+                </div>
+
+                <div id="startOdometerGroup">
+                    <label for="startOdometer" class="block text-gray-700 text-sm font-medium mb-1">საწყისი ოდომეტრი:</label>
+                    <input type="number" id="startOdometer" placeholder="შეიყვანეთ საწყისი ოდომეტრი" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full"> <!-- Removed required from HTML -->
+                </div>
+
+                <div id="endOdometerGroup" class="hidden">
+                    <label for="endOdometer" class="block text-gray-700 text-sm font-medium mb-1">საბოლოო ოდომეტრი:</label>
+                    <input type="number" id="endOdometer" placeholder="შეიყვანეთ საბოლოო ოდომეტრი" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full"> <!-- Removed required from HTML -->
+                </div>
+                
+                <!-- სურათის ატვირთვის ველი - ეს div დაიმალება კურიერისთვის JS-ით -->
+                <div id="odometerImageGroup">
+                    <label for="odometerImage" class="block text-gray-700 text-sm font-medium mb-1">ოდომეტრის სურათი (არასავალდებულო):</label>
+                    <input type="file" id="odometerImage" accept="image/*" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full">
+                </div>
+
+                <button type="submit" id="submitOdometerBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    მონაცემების შენახვა
+                </button>
+            </form>
+            <div id="courierMessage" class="message hidden"></div>
+
+            <h2 class="text-2xl font-bold text-gray-800 mt-8 mb-4 text-center">თქვენი მონაცემები</h2>
+            <div class="overflow-x-auto"> <!-- Added for mobile table scrolling -->
+                <table class="data-table min-w-full">
+                    <thead>
+                        <tr>
+                            <th>თარიღი</th>
+                            <th>საწყისი</th>
+                            <th>საბოლოო</th>
+                            <th>გავლილი მანძილი</th>
+                            <th>საწყისი სურათი</th>
+                            <th>დასრულების სურათი</th>
+                            <th>დაწყების დრო</th>
+                            <th>დასრულების დრო</th>
+                        </tr>
+                    </thead>
+                    <tbody id="courierDataTableBody">
+                        <!-- კურიერის მონაცემები აქ გამოჩნდება -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ადმინის პანელი -->
+        <div id="adminPanel" class="hidden bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">ადმინ პანელი - ყველა კურიერის მონაცემები</h2>
+            
+            <!-- ფილტრაციის ველები -->
+            <div class="flex flex-wrap gap-4 mb-6">
+                <div class="flex-1 min-w-[150px]">
+                    <label for="filterCourier" class="block text-gray-700 text-sm font-medium mb-1">კურიერი:</label>
+                    <select id="filterCourier" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2 border rounded-lg">
+                        <option value="">ყველა კურიერი</option>
+                        <!-- კურიერები აქ დაემატება JS-ით -->
+                    </select>
+                </div>
+                <div class="flex-1 min-w-[150px]">
+                    <label for="filterStartDate" class="block text-gray-700 text-sm font-medium mb-1">თარიღიდან:</label>
+                    <input type="date" id="filterStartDate" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full">
+                </div>
+                <div class="flex-1 min-w-[150px]">
+                    <label for="filterEndDate" class="block text-gray-700 text-sm font-medium mb-1">თარიღამდე:</label>
+                    <input type="date" id="filterEndDate" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full">
+                </div>
+                <button type="button" id="applyFiltersBtn" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 self-end">
+                    ფილტრაცია
+                </button>
+                <button type="button" id="downloadExcelBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 self-end">
+                    ექსელში ჩამოტვირთვა
+                </button>
+                <button type="button" id="clearDatabaseBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 self-end">
+                    ბაზის გასუფთავება
+                </button>
+            </div>
+
+            <div class="overflow-x-auto"> <!-- Added for mobile table scrolling -->
+                <table class="data-table min-w-full">
+                    <thead>
+                        <tr>
+                            <th>კურიერი</th>
+                            <th>თარიღი</th>
+                            <th>საწყისი ოდომეტრი</th>
+                            <th>საბოლოო ოდომეტრი</th>
+                            <th>გავლილი მანძილი</th>
+                            <th>საწვავი (ლიტრი)</th>
+                            <th>საწვავის ღირებულება</th>
+                            <th>საწყისი სურათი</th>
+                            <th>დასრულების სურათი</th>
+                            <th>დაწყების დრო</th>
+                            <th>დასრულების დრო</th>
+                            <th>მოქმედება</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminDataTableBody">
+                        <!-- ადმინის მონაცემები აქ გამოჩნდება -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="adminMessage" class="message hidden"></div>
+        </div>
+    </div>
+
+    <!-- პაროლის მოდალი -->
+    <div id="passwordModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-80 space-y-4">
+            <h3 class="text-xl font-bold text-gray-800 text-center">პაროლის შეყვანა</h3>
+            <div>
+                <label for="passwordInput" class="block text-gray-700 text-sm font-medium mb-1">შეიყვანეთ პაროლი:</label>
+                <input type="password" id="passwordInput" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
+            </div>
+            <div id="modalMessage" class="message hidden"></div>
+            <div class="flex justify-end space-x-4">
+                <button type="button" id="cancelClearBtn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg">
+                    გაუქმება
+                </button>
+                <button type="button" id="confirmClearBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
+                    დადასტურება
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- შენი JavaScript კოდის ფაილის დაკავშირება -->
+    <script type="module" src="script.js"></script>
+</body>
+</html>
