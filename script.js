@@ -60,9 +60,9 @@ const currentDateInput = document.getElementById('currentDate');
 const startOdometerInput = document.getElementById('startOdometer');
 const endOdometerInput = document.getElementById('endOdometer');
 const odometerImageInput = document.getElementById('odometerImage');
-const submitOdometerBtn = document.getElementById('submitOdometerBtn'); // ახალი ღილაკი
-const startOdometerGroup = document.getElementById('startOdometerGroup'); // საწყისი ოდომეტრის ჯგუფი
-const endOdometerGroup = document.getElementById('endOdometerGroup'); // საბოლოო ოდომეტრის ჯგუფი
+const submitOdometerBtn = document.getElementById('submitOdometerBtn');
+const startOdometerGroup = document.getElementById('startOdometerGroup');
+const endOdometerGroup = document.getElementById('endOdometerGroup');
 const courierMessageDiv = document.getElementById('courierMessage');
 const courierDataTableBody = document.getElementById('courierDataTableBody');
 
@@ -71,7 +71,7 @@ const adminDataTableBody = document.getElementById('adminDataTableBody');
 const adminMessageDiv = document.getElementById('adminMessage');
 const filterCourierSelect = document.getElementById('filterCourier');
 const filterStartDateInput = document.getElementById('filterStartDate');
-const filterEndDateInput = document.getElementById('filterEndDate'); // შეცვლილია
+const filterEndDateInput = document.getElementById('filterEndDate');
 const applyFiltersBtn = document.getElementById('applyFiltersBtn');
 const downloadExcelBtn = document.getElementById('downloadExcelBtn');
 const clearDatabaseBtn = document.getElementById('clearDatabaseBtn');
@@ -264,8 +264,10 @@ async function checkCourierDayStatus(userId) {
             isDayStarted = true;
             startOdometerInput.value = data.startOdometer; // შეავსე საწყისი ოდომეტრი
             startOdometerInput.setAttribute('disabled', 'true'); // გათიშე საწყისი ოდომეტრი
+            startOdometerInput.removeAttribute('required'); // მოაშორე required
             startOdometerGroup.classList.remove('hidden'); // დარწმუნდი რომ ჩანს
             endOdometerGroup.classList.remove('hidden'); // აჩვენე საბოლოო ოდომეტრის ველი
+            endOdometerInput.setAttribute('required', 'true'); // დაამატე required
             submitOdometerBtn.textContent = 'დღის დასრულება';
         } else {
             // დღე დასრულებულია
@@ -274,8 +276,10 @@ async function checkCourierDayStatus(userId) {
             startOdometerInput.value = '';
             endOdometerInput.value = '';
             startOdometerInput.removeAttribute('disabled');
+            startOdometerInput.setAttribute('required', 'true'); // დაამატე required
             startOdometerGroup.classList.remove('hidden'); // დარწმუნდი რომ ჩანს
             endOdometerGroup.classList.add('hidden'); // დამალე საბოლოო ოდომეტრის ველი
+            endOdometerInput.removeAttribute('required'); // მოაშორე required
             submitOdometerBtn.textContent = 'დღის დაწყება';
         }
     } else {
@@ -285,8 +289,10 @@ async function checkCourierDayStatus(userId) {
         startOdometerInput.value = '';
         endOdometerInput.value = '';
         startOdometerInput.removeAttribute('disabled');
+        startOdometerInput.setAttribute('required', 'true'); // დაამატე required
         startOdometerGroup.classList.remove('hidden'); // დარწმუნდი რომ ჩანს
         endOdometerGroup.classList.add('hidden'); // დამალე საბოლოო ოდომეტრის ველი
+        endOdometerInput.removeAttribute('required'); // მოაშორე required
         submitOdometerBtn.textContent = 'დღის დაწყება';
     }
     odometerForm.reset(); // ფორმის გასუფთავება
@@ -347,7 +353,7 @@ odometerForm.addEventListener('submit', async (e) => {
             currentCourierDailyEntryId = docRef.id;
             isDayStarted = true;
             showMessage(courierMessageDiv, 'დღე წარმატებით დაიწყო!', 'success');
-            checkCourierDayStatus(currentUserId); // განაახლე UI
+            checkCourierDailyStatus(currentUserId); // განაახლე UI
         } catch (error) {
             console.error("დღის დაწყების შეცდომა: ", error);
             showMessage(courierMessageDiv, 'დღის დაწყებისას მოხდა შეცდომა. ' + error.message, 'error');
@@ -384,7 +390,7 @@ odometerForm.addEventListener('submit', async (e) => {
             isDayStarted = false;
             currentCourierDailyEntryId = null;
             showMessage(courierMessageDiv, 'დღე წარმატებით დასრულდა!', 'success');
-            checkCourierDayStatus(currentUserId); // განაახლე UI
+            checkCourierDailyStatus(currentUserId); // განაახლე UI
         } catch (error) {
             console.error("დღის დასრულების შეცდომა: ", error);
             showMessage(courierMessageDiv, 'დღის დასრულებისას მოხდა შეცდომა. ' + error.message, 'error');
