@@ -231,7 +231,7 @@ function renderUIForRole(role) {
 
 // --- ყველა მომხმარებლის მონაცემების ჩატვირთვა (სახელებისთვის) ---
 async function loadAllUsersData() {
-    const usersCollection = collection(db, "users");
+    const usersCollection = collection(db, "users"); // სწორი გზა
     onSnapshot(usersCollection, (snapshot) => {
         allUsersData = {};
         snapshot.forEach(doc => {
@@ -250,7 +250,7 @@ async function loadAllUsersData() {
 async function checkCourierDayStatus(userId) {
     const todayDate = currentDateInput.value; // მიმდინარე თარიღი
     const q = query(
-        collection(db, `dailyReadings`),
+        collection(db, `dailyReadings`), // სწორი გზა
         where("courierId", "==", userId),
         where("date", "==", todayDate)
     );
@@ -340,7 +340,7 @@ odometerForm.addEventListener('submit', async (e) => {
         }
 
         try {
-            const docRef = await addDoc(collection(db, `dailyReadings`), {
+            const docRef = await addDoc(collection(db, `dailyReadings`), { // სწორი გზა
                 courierId: currentUserId,
                 date: date,
                 startOdometer: startOdometer,
@@ -370,7 +370,7 @@ odometerForm.addEventListener('submit', async (e) => {
             return;
         }
 
-        const docRef = doc(db, "dailyReadings", currentCourierDailyEntryId);
+        const docRef = doc(db, "dailyReadings", currentCourierDailyEntryId); // სწორი გზა
         const docSnap = await getDoc(docRef);
         if (!docSnap.exists()) {
             showMessage(courierMessageDiv, 'მიმდინარე დღის ჩანაწერი ვერ მოიძებნა.', 'error');
@@ -410,7 +410,7 @@ odometerForm.addEventListener('submit', async (e) => {
 // კურიერის მონაცემების ჩატვირთვა რეალურ დროში
 function loadCourierData(userIdToLoad) {
     const q = query(
-        collection(db, `dailyReadings`),
+        collection(db, `dailyReadings`), // სწორი გზა
         where("courierId", "==", userIdToLoad)
     );
 
@@ -525,7 +525,7 @@ downloadExcelBtn.addEventListener('click', async () => {
 
 function loadAdminData() {
     adminDataTableBody.innerHTML = '';
-    let q = collection(db, `dailyReadings`);
+    let q = collection(db, `dailyReadings`); // სწორი გზა
 
     const selectedCourierId = filterCourierSelect.value;
     const startDate = filterStartDateInput.value;
@@ -609,7 +609,7 @@ function loadAdminData() {
                     }
 
                     try {
-                        await setDoc(doc(db, "dailyReadings", docId), {
+                        await setDoc(doc(db, "dailyReadings", docId), { // სწორი გზა
                             fuelConsumed: fuelConsumed,
                             fuelCost: fuelCost
                         }, { merge: true });
@@ -648,7 +648,7 @@ clearDatabaseBtn.addEventListener('click', () => {
         passwordInput.value = '';
         modalMessageDiv.classList.add('hidden');
     } else {
-        showMessage(adminMessageDiv, 'თქვენ არ გაქვთ უფლება ამ მოქმედების შესრულებლად.', 'error');
+        showMessage(adminMessageDiv, 'თქვენ არ გაქვთ უფლება ამ მოქმედების შესასრულებლად.', 'error');
     }
 });
 
@@ -674,7 +674,7 @@ cancelClearBtn.addEventListener('click', () => {
 
 async function clearDatabase() {
     try {
-        const dailyReadingsRef = collection(db, "dailyReadings");
+        const dailyReadingsRef = collection(db, "dailyReadings"); // სწორი გზა
         const q = query(dailyReadingsRef);
         const snapshot = await getDocs(q);
 
