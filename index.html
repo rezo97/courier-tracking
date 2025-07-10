@@ -102,7 +102,7 @@
         </header>
 
         <!-- ავტორიზაციის კონტეინერი -->
-        <div id="authContainer" class="flex flex-col items-center justify-center gap-8"> <!-- Changed to flexbox for centering -->
+        <div id="authContainer" class="flex flex-col items-center justify-center gap-8">
             <!-- შესვლის ფორმა -->
             <div id="loginSection" class="bg-white p-6 rounded-lg shadow-md w-full max-w-sm">
                 <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">შესვლა</h2>
@@ -166,12 +166,12 @@
 
                 <div id="startOdometerGroup">
                     <label for="startOdometer" class="block text-gray-700 text-sm font-medium mb-1">საწყისი ოდომეტრი:</label>
-                    <input type="number" id="startOdometer" placeholder="შეიყვანეთ საწყისი ოდომეტრი" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
+                    <input type="number" id="startOdometer" placeholder="შეიყვანეთ საწყისი ოდომეტრი" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full"> <!-- Removed required -->
                 </div>
 
                 <div id="endOdometerGroup" class="hidden">
                     <label for="endOdometer" class="block text-gray-700 text-sm font-medium mb-1">საბოლოო ოდომეტრი:</label>
-                    <input type="number" id="endOdometer" placeholder="შეიყვანეთ საბოლოო ოდომეტრი" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
+                    <input type="number" id="endOdometer" placeholder="შეიყვანეთ საბოლოო ოდომეტრი" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full"> <!-- Removed required -->
                 </div>
                 
                 <!-- სურათის ატვირთვის ველი -->
