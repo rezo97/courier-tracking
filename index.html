@@ -102,9 +102,9 @@
         </header>
 
         <!-- ავტორიზაციის კონტეინერი -->
-        <div id="authContainer" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div id="authContainer" class="flex flex-col items-center justify-center gap-8"> <!-- Changed to flexbox for centering -->
             <!-- შესვლის ფორმა -->
-            <div id="loginSection" class="bg-white p-6 rounded-lg shadow-md">
+            <div id="loginSection" class="bg-white p-6 rounded-lg shadow-md w-full max-w-sm">
                 <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">შესვლა</h2>
                 <form id="loginForm" class="space-y-4">
                     <div>
@@ -125,7 +125,7 @@
             </div>
 
             <!-- რეგისტრაციის ფორმა -->
-            <div id="registerSection" class="bg-white p-6 rounded-lg shadow-md hidden">
+            <div id="registerSection" class="bg-white p-6 rounded-lg shadow-md hidden w-full max-w-sm">
                 <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">რეგისტრაცია</h2>
                 <form id="signupForm" class="space-y-4">
                     <div>
@@ -268,7 +268,7 @@
     </div>
 
     <!-- პაროლის მოდალი -->
-    <div id="passwordModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
+    <div id="passwordModal" class="fixed inset-0 bg-gray-600 bg-opacity50 flex items-center justify-center hidden">
         <div class="bg-white p-6 rounded-lg shadow-xl w-80 space-y-4">
             <h3 class="text-xl font-bold text-gray-800 text-center">პაროლის შეყვანა</h3>
             <div>
