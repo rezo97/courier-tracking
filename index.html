@@ -164,12 +164,12 @@
                     <input type="date" id="currentDate" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
                 </div>
 
-                <div>
+                <div id="startOdometerGroup">
                     <label for="startOdometer" class="block text-gray-700 text-sm font-medium mb-1">საწყისი ოდომეტრი:</label>
                     <input type="number" id="startOdometer" placeholder="შეიყვანეთ საწყისი ოდომეტრი" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
                 </div>
 
-                <div>
+                <div id="endOdometerGroup" class="hidden">
                     <label for="endOdometer" class="block text-gray-700 text-sm font-medium mb-1">საბოლოო ოდომეტრი:</label>
                     <input type="number" id="endOdometer" placeholder="შეიყვანეთ საბოლოო ოდომეტრი" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
                 </div>
@@ -180,7 +180,7 @@
                     <input type="file" id="odometerImage" accept="image/*" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full">
                 </div>
 
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                <button type="submit" id="submitOdometerBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                     მონაცემების შენახვა
                 </button>
             </form>
@@ -195,8 +195,10 @@
                             <th>საწყისი</th>
                             <th>საბოლოო</th>
                             <th>გავლილი მანძილი</th>
-                            <th>სურათი</th>
-                            <th>ჩაწერის დრო</th>
+                            <th>საწყისი სურათი</th>
+                            <th>დასრულების სურათი</th>
+                            <th>დაწყების დრო</th>
+                            <th>დასრულების დრო</th>
                         </tr>
                     </thead>
                     <tbody id="courierDataTableBody">
@@ -249,8 +251,10 @@
                             <th>გავლილი მანძილი</th>
                             <th>საწვავი (ლიტრი)</th>
                             <th>საწვავის ღირებულება</th>
-                            <th>სურათი</th>
-                            <th>ჩაწერის დრო</th>
+                            <th>საწყისი სურათი</th>
+                            <th>დასრულების სურათი</th>
+                            <th>დაწყების დრო</th>
+                            <th>დასრულების დრო</th>
                             <th>მოქმედება</th>
                         </tr>
                     </thead>
