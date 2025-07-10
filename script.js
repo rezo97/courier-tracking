@@ -1,9 +1,9 @@
 // Firebase-ის საჭირო მოდულების იმპორტი
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-import { getFirestore, collection, addDoc, query, where, onSnapshot, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, query, where, onSnapshot, doc, setDoc, getDoc, serverTimestamp, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js"; // დავამატე getDocs და deleteDoc
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js"; // Firebase Storage-ის იმპორტი
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js"; // Firebase Storage-ის იმპორტი და deleteObject
 
 // შენი Firebase კონფიგურაციის მონაცემები
 const firebaseConfig = {
@@ -66,6 +66,12 @@ const filterStartDateInput = document.getElementById('filterStartDate');
 const filterEndDateInput = document.getElementById('filterEndDate');
 const applyFiltersBtn = document.getElementById('applyFiltersBtn');
 const downloadExcelBtn = document.getElementById('downloadExcelBtn');
+const clearDatabaseBtn = document.getElementById('clearDatabaseBtn'); // ახალი ღილაკი
+const passwordModal = document.getElementById('passwordModal'); // პაროლის მოდალი
+const passwordInput = document.getElementById('passwordInput'); // პაროლის input
+const confirmClearBtn = document.getElementById('confirmClearBtn'); // დადასტურების ღილაკი
+const cancelClearBtn = document.getElementById('cancelClearBtn'); // გაუქმების ღილაკი
+const modalMessageDiv = document.getElementById('modalMessage'); // მოდალის შეტყობინება
 
 
 // მიმდინარე თარიღის დაყენება ინფუთ ველში
@@ -210,7 +216,7 @@ function renderUIForRole(role) {
         loadAdminData(); // ადმინის მონაცემების ჩატვირთვა
     } else {
         authContainer.classList.remove('hidden'); // აჩვენე შესვლა/რეგისტრაცია
-        loginSection.classList.remove('hidden'); // ნაგულისხმევად შესვლის ფორმა
+        loginSection.classList.remove('hidden'); // ნაგულისმევად შესვლის ფორმა
         registerSection.classList.add('hidden');
     }
 }
@@ -363,19 +369,34 @@ downloadExcelBtn.addEventListener('click', async () => {
     const table = document.getElementById('adminDataTableBody');
     let csv = [];
     
-    // Header row
-    const headers = Array.from(table.closest('table').querySelectorAll('thead th')).map(th => th.innerText).join(',');
+    // Header row - ქართული სათაურები
+    const headers = [
+        "კურიერის სახელი", // შეცვლილია
+        "თარიღი",
+        "საწყისი ოდომეტრი",
+        "საბოლოო ოდომეტრი",
+        "გავლილი მანძილი",
+        "საწვავი (ლიტრი)",
+        "საწვავის ღირებულება",
+        "სურათის URL", // შეცვლილია
+        "ჩაწერის დრო",
+        "მოქმედება" // ეს ველი არ არის მონაცემთა ბაზაში, მაგრამ ცხრილშია
+    ].join(',');
     csv.push(headers);
 
     // Data rows
     Array.from(table.rows).forEach(row => {
         const rowData = Array.from(row.cells).map((cell, index) => {
-            if (index === 5 || index === 6) { // Fuel Consumed and Fuel Cost columns
+            if (index === 0) { // კურიერის სახელი
+                return cell.innerText.split('(')[0].trim(); // ამოიღე მხოლოდ სახელი და გვარი ID-ის გარეშე
+            } else if (index === 5 || index === 6) { // Fuel Consumed and Fuel Cost columns
                 const input = cell.querySelector('input');
                 return input ? input.value : '';
             } else if (index === 7) { // Image column
                 const imgLink = cell.querySelector('a');
                 return imgLink ? imgLink.href : 'არ არის';
+            } else if (index === 9) { // "მოქმედება" სვეტი
+                return ''; // არაფერი ჩაწერო "მოქმედება" სვეტში
             }
             return cell.innerText;
         }).join(',');
@@ -510,4 +531,76 @@ function showMessage(element, msg, type) {
     setTimeout(() => {
         element.classList.add('hidden'); // დამალვა 5 წამის შემდეგ
     }, 5000);
+}
+
+// --- ბაზის გასუფთავების ლოგიკა ---
+
+// ღილაკის მოვლენა
+clearDatabaseBtn.addEventListener('click', () => {
+    if (currentUserRole === 'admin') {
+        passwordModal.classList.remove('hidden'); // მოდალის ჩვენება
+        passwordInput.value = ''; // პაროლის ველის გასუფთავება
+        modalMessageDiv.classList.add('hidden'); // შეტყობინების დამალვა
+    } else {
+        showMessage(adminMessageDiv, 'თქვენ არ გაქვთ უფლება ამ მოქმედების შესასრულებლად.', 'error');
+    }
+});
+
+// მოდალის დადასტურების ღილაკი
+confirmClearBtn.addEventListener('click', async () => {
+    const enteredPassword = passwordInput.value;
+    const correctPassword = "12345678"; // დაყენებული პაროლი
+
+    if (enteredPassword === correctPassword) {
+        modalMessageDiv.classList.add('hidden');
+        passwordModal.classList.add('hidden'); // მოდალის დამალვა
+        showMessage(adminMessageDiv, 'ბაზის გასუფთავება იწყება...', 'success');
+        await clearDatabase(); // ბაზის გასუფთავების ფუნქციის გამოძახება
+    } else {
+        showMessage(modalMessageDiv, 'არასწორი პაროლი!', 'error');
+    }
+});
+
+// მოდალის გაუქმების ღილაკი
+cancelClearBtn.addEventListener('click', () => {
+    passwordModal.classList.add('hidden'); // მოდალის დამალვა
+    modalMessageDiv.classList.add('hidden'); // შეტყობინების დამალვა
+});
+
+
+async function clearDatabase() {
+    try {
+        // წაშალე `dailyReadings` კოლექცია
+        const dailyReadingsRef = collection(db, "dailyReadings");
+        const q = query(dailyReadingsRef); // ყველა დოკუმენტის ასაღებად
+        const snapshot = await getDocs(q);
+
+        const deletePromises = [];
+        const imageDeletePromises = [];
+
+        snapshot.forEach(docItem => {
+            // სურათების წაშლა Storage-დან
+            const imageUrl = docItem.data().imageUrl;
+            if (imageUrl) {
+                const imageRef = ref(storage, imageUrl);
+                imageDeletePromises.push(deleteObject(imageRef).catch(error => {
+                    console.warn(`სურათის წაშლის შეცდომა Storage-დან (${imageUrl}):`, error);
+                    // არ შევაჩეროთ მთელი პროცესი, თუ სურათი ვერ წაიშალა
+                }));
+            }
+            // დოკუმენტების წაშლა Firestore-დან
+            deletePromises.push(deleteDoc(doc(db, "dailyReadings", docItem.id)));
+        });
+
+        // დაელოდე ყველა სურათის წაშლას
+        await Promise.all(imageDeletePromises);
+        // დაელოდე ყველა დოკუმენტის წაშლას
+        await Promise.all(deletePromises);
+
+        showMessage(adminMessageDiv, 'ბაზა წარმატებით გასუფთავდა!', 'success');
+        loadAdminData(); // ცხრილის განახლება
+    } catch (error) {
+        console.error("ბაზის გასუფთავების შეცდომა:", error);
+        showMessage(adminMessageDiv, 'ბაზის გასუფთავებისას მოხდა შეცდომა: ' + error.message, 'error');
+    }
 }
