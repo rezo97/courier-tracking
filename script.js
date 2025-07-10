@@ -10,7 +10,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyB4X0i9h8dSgxuJxl9ld6S21JuRHezMA-w", // <-- აქ ჩასვი შენი ზუსტი API Key
   authDomain: "courier-tracking-c36c5.firebaseapp.com",
   projectId: "courier-tracking-c36c5",
-  storageBucket: "courier-tracking-c36c5.appspot.com", // storageBucket-ის შეცვლა .firebasestorage.app-დან .appspot.com-ზე
+  storageBucket: "courier-tracking-c36c5.appspot.com",
   messagingSenderId: "19606482959",
   appId: "1:19606482959:web:1f3c22799f66b0cf17337a",
   measurementId: "G-R2MZV6GDXB"
@@ -246,7 +246,7 @@ odometerForm.addEventListener('submit', async (e) => {
     const date = currentDateInput.value;
     const startOdometer = parseFloat(startOdometerInput.value);
     const endOdometer = parseFloat(endOdometerInput.value);
-    const odometerImageFile = odometerImageInput.files[0];
+    const odometerImageFile = odometerImageInput.files[0]; // სურათის ფაილი
 
     if (isNaN(startOdometer) || isNaN(endOdometer) || endOdometer < startOdometer) {
         showMessage(courierMessageDiv, 'შეყვანილი მონაცემები არასწორია. საბოლოო ოდომეტრი არ უნდა იყოს საწყისზე ნაკლები.', 'error');
@@ -257,6 +257,7 @@ odometerForm.addEventListener('submit', async (e) => {
     let imageUrl = null;
     let imageUploadTimestamp = null;
 
+    // შეამოწმე, აირჩია თუ არა მომხმარებელმა სურათი
     if (odometerImageFile) {
         try {
             const storageRef = ref(storage, `odometer_images/${currentUserId}/${Date.now()}_${odometerImageFile.name}`);
@@ -266,7 +267,7 @@ odometerForm.addEventListener('submit', async (e) => {
         } catch (error) {
             console.error("სურათის ატვირთვის შეცდომა:", error);
             showMessage(courierMessageDiv, 'სურათის ატვირთვისას მოხდა შეცდომა: ' + error.message, 'error');
-            return; // შეაჩერე მონაცემების შენახვა, თუ სურათი ვერ აიტვირთა
+            // არ ვაბრუნებთ აქედან, რათა სხვა მონაცემები მაინც შეინახოს, თუ სურათის ატვირთვა ვერ მოხერხდა
         }
     }
 
@@ -280,8 +281,8 @@ odometerForm.addEventListener('submit', async (e) => {
             dailyMileage: dailyMileage,
             fuelConsumed: null, // საწვავი თავიდან ცარიელია
             fuelCost: null,     // ღირებულება თავიდან ცარიელია
-            imageUrl: imageUrl, // სურათის URL
-            imageUploadTimestamp: imageUploadTimestamp, // სურათის ატვირთვის დრო
+            imageUrl: imageUrl, // სურათის URL (იქნება null თუ სურათი არ აიტვირთა)
+            imageUploadTimestamp: imageUploadTimestamp, // სურათის ატვირთვის დრო (იქნება null თუ სურათი არ აიტვირთა)
             timestamp: serverTimestamp() // ჩანაწერის შექმნის დრო
         });
 
