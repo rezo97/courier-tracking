@@ -22,38 +22,57 @@
             </button>
         </header>
 
-        <!-- ავტორიზაციის ფორმები -->
-        <div id="authSection" class="space-y-4">
-            <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">შესვლა / რეგისტრაცია</h2>
-            <form id="loginForm" class="space-y-4">
-                <div>
-                    <label for="loginEmail" class="block text-gray-700 text-sm font-medium mb-1">ელ.ფოსტა:</label>
-                    <input type="email" id="loginEmail" placeholder="შეიყვანეთ ელ.ფოსტა" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
-                </div>
-                <div>
-                    <label for="loginPassword" class="block text-gray-700 text-sm font-medium mb-1">პაროლი:</label>
-                    <input type="password" id="loginPassword" placeholder="შეიყვანეთ პაროლი" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
-                </div>
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                    შესვლა
-                </button>
-            </form>
+        <!-- ავტორიზაციის კონტეინერი -->
+        <div id="authContainer">
+            <!-- შესვლის ფორმა -->
+            <div id="loginSection" class="space-y-4">
+                <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">შესვლა</h2>
+                <form id="loginForm" class="space-y-4">
+                    <div>
+                        <label for="loginEmail" class="block text-gray-700 text-sm font-medium mb-1">ელ.ფოსტა:</label>
+                        <input type="email" id="loginEmail" placeholder="შეიყვანეთ ელ.ფოსტა" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
+                    </div>
+                    <div>
+                        <label for="loginPassword" class="block text-gray-700 text-sm font-medium mb-1">პაროლი:</label>
+                        <input type="password" id="loginPassword" placeholder="შეიყვანეთ პაროლი" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        შესვლა
+                    </button>
+                    <button type="button" id="showRegisterBtn" class="w-full bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 mt-2">
+                        რეგისტრაცია
+                    </button>
+                </form>
+            </div>
 
-            <p class="text-center text-gray-600">ან</p>
-
-            <form id="signupForm" class="space-y-4">
-                <div>
-                    <label for="signupEmail" class="block text-gray-700 text-sm font-medium mb-1">ელ.ფოსტა:</label>
-                    <input type="email" id="signupEmail" placeholder="შეიყვანეთ ელ.ფოსტა" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
-                </div>
-                <div>
-                    <label for="signupPassword" class="block text-gray-700 text-sm font-medium mb-1">პაროლი:</label>
-                    <input type="password" id="signupPassword" placeholder="შეიყვანეთ პაროლი (მინ. 6 სიმბოლო)" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
-                </div>
-                <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
-                    რეგისტრაცია (კურიერი)
-                </button>
-            </form>
+            <!-- რეგისტრაციის ფორმა -->
+            <div id="registerSection" class="space-y-4 hidden">
+                <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">რეგისტრაცია</h2>
+                <form id="signupForm" class="space-y-4">
+                    <div>
+                        <label for="signupEmail" class="block text-gray-700 text-sm font-medium mb-1">ელ.ფოსტა:</label>
+                        <input type="email" id="signupEmail" placeholder="შეიყვანეთ ელ.ფოსტა" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
+                    </div>
+                    <div>
+                        <label for="signupPassword" class="block text-gray-700 text-sm font-medium mb-1">პაროლი:</label>
+                        <input type="password" id="signupPassword" placeholder="შეიყვანეთ პაროლი (მინ. 6 სიმბოლო)" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
+                    </div>
+                    <div>
+                        <label for="signupFirstName" class="block text-gray-700 text-sm font-medium mb-1">სახელი:</label>
+                        <input type="text" id="signupFirstName" placeholder="შეიყვანეთ სახელი" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
+                    </div>
+                    <div>
+                        <label for="signupLastName" class="block text-gray-700 text-sm font-medium mb-1">გვარი:</label>
+                        <input type="text" id="signupLastName" placeholder="შეიყვანეთ გვარი" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
+                    </div>
+                    <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                        რეგისტრაცია
+                    </button>
+                    <button type="button" id="showLoginBtn" class="w-full bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 mt-2">
+                        უკან შესვლაზე
+                    </button>
+                </form>
+            </div>
             <div id="authMessage" class="message hidden"></div>
         </div>
 
@@ -75,6 +94,12 @@
                     <label for="endOdometer" class="block text-gray-700 text-sm font-medium mb-1">საბოლოო ოდომეტრი:</label>
                     <input type="number" id="endOdometer" placeholder="შეიყვანეთ საბოლოო ოდომეტრი" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full" required>
                 </div>
+                
+                <!-- სურათის ატვირთვის ველი -->
+                <div>
+                    <label for="odometerImage" class="block text-gray-700 text-sm font-medium mb-1">ოდომეტრის სურათი:</label>
+                    <input type="file" id="odometerImage" accept="image/*" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full">
+                </div>
 
                 <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                     მონაცემების შენახვა
@@ -90,6 +115,8 @@
                         <th>საწყისი</th>
                         <th>საბოლოო</th>
                         <th>გავლილი მანძილი</th>
+                        <th>სურათი</th>
+                        <th>ჩაწერის დრო</th>
                     </tr>
                 </thead>
                 <tbody id="courierDataTableBody">
@@ -101,16 +128,44 @@
         <!-- ადმინის პანელი -->
         <div id="adminPanel" class="hidden">
             <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">ადმინ პანელი - ყველა კურიერის მონაცემები</h2>
+            
+            <!-- ფილტრაციის ველები -->
+            <div class="flex flex-wrap gap-4 mb-6">
+                <div class="flex-1 min-w-[150px]">
+                    <label for="filterCourier" class="block text-gray-700 text-sm font-medium mb-1">კურიერი:</label>
+                    <select id="filterCourier" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2 border rounded-lg">
+                        <option value="">ყველა კურიერი</option>
+                        <!-- კურიერები აქ დაემატება JS-ით -->
+                    </select>
+                </div>
+                <div class="flex-1 min-w-[150px]">
+                    <label for="filterStartDate" class="block text-gray-700 text-sm font-medium mb-1">თარიღიდან:</label>
+                    <input type="date" id="filterStartDate" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full">
+                </div>
+                <div class="flex-1 min-w-[150px]">
+                    <label for="filterEndDate" class="block text-gray-700 text-sm font-medium mb-1">თარიღამდე:</label>
+                    <input type="date" id="filterEndDate" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full">
+                </div>
+                <button type="button" id="applyFiltersBtn" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 self-end">
+                    ფილტრაცია
+                </button>
+                <button type="button" id="downloadExcelBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 self-end">
+                    ექსელში ჩამოტვირთვა
+                </button>
+            </div>
+
             <table class="data-table">
                 <thead>
                     <tr>
-                        <th>კურიერის ID</th>
+                        <th>კურიერი</th>
                         <th>თარიღი</th>
-                        <th>საწყისი</th>
-                        <th>საბოლოო</th>
+                        <th>საწყისი ოდომეტრი</th>
+                        <th>საბოლოო ოდომეტრი</th>
                         <th>გავლილი მანძილი</th>
                         <th>საწვავი (ლიტრი)</th>
                         <th>საწვავის ღირებულება</th>
+                        <th>სურათი</th>
+                        <th>ჩაწერის დრო</th>
                         <th>მოქმედება</th>
                     </tr>
                 </thead>
