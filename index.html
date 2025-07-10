@@ -166,16 +166,16 @@
 
                 <div id="startOdometerGroup">
                     <label for="startOdometer" class="block text-gray-700 text-sm font-medium mb-1">საწყისი ოდომეტრი:</label>
-                    <input type="number" id="startOdometer" placeholder="შეიყვანეთ საწყისი ოდომეტრი" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full"> <!-- Removed required -->
+                    <input type="number" id="startOdometer" placeholder="შეიყვანეთ საწყისი ოდომეტრი" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full"> <!-- Removed required from HTML -->
                 </div>
 
                 <div id="endOdometerGroup" class="hidden">
                     <label for="endOdometer" class="block text-gray-700 text-sm font-medium mb-1">საბოლოო ოდომეტრი:</label>
-                    <input type="number" id="endOdometer" placeholder="შეიყვანეთ საბოლოო ოდომეტრი" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full"> <!-- Removed required -->
+                    <input type="number" id="endOdometer" placeholder="შეიყვანეთ საბოლოო ოდომეტრი" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full"> <!-- Removed required from HTML -->
                 </div>
                 
-                <!-- სურათის ატვირთვის ველი -->
-                <div>
+                <!-- სურათის ატვირთვის ველი - ეს div დაიმალება კურიერისთვის JS-ით -->
+                <div id="odometerImageGroup">
                     <label for="odometerImage" class="block text-gray-700 text-sm font-medium mb-1">ოდომეტრის სურათი (არასავალდებულო):</label>
                     <input type="file" id="odometerImage" accept="image/*" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full">
                 </div>
@@ -268,7 +268,7 @@
     </div>
 
     <!-- პაროლის მოდალი -->
-    <div id="passwordModal" class="fixed inset-0 bg-gray-600 bg-opacity50 flex items-center justify-center hidden">
+    <div id="passwordModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
         <div class="bg-white p-6 rounded-lg shadow-xl w-80 space-y-4">
             <h3 class="text-xl font-bold text-gray-800 text-center">პაროლის შეყვანა</h3>
             <div>
